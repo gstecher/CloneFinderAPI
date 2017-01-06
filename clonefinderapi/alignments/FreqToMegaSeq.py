@@ -13,7 +13,7 @@ class FreqToMegaSeq:
     def __init__(self):
         self._mega_seqs = []
         
-    def initialize(self, tumor_sample_profiles):
+    def initialize(self, tumor_sample_profiles, remove_duplicates = True):
         self._mega_seqs.append('#MEGA')
         self._mega_seqs.append('!Title ' + tumor_sample_profiles.name)
         self._mega_seqs.append('Format datatype=dna')
@@ -26,8 +26,11 @@ class FreqToMegaSeq:
         for profile in tumor_sample_profiles:
             name = profile.name
             seqdata = profile.get_alignment_string()
+            if remove_duplicates == True:
+                if seqdata in self._mega_seqs:
+                    continue
             self._mega_seqs.append('#' + name)
-            self._mega_seqs.append(seqdata)
+            self._mega_seqs.append(seqdata)                            
         
     def _get_hg19_sequence(self, num_sites):
         result = ''
