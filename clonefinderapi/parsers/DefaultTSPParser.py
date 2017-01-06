@@ -43,7 +43,8 @@ class DefaultTSPParser(AbstractTSPParser):
     def parse(self):                
         try:
             if os.path.isfile(self._input_data_file) == False:
-                IOError('input data file not found')            
+                IOError('input data file not found')    
+            self.tumor_sample_profiles.name = os.path.basename(self._input_data_file)
             data = open(self._input_data_file, 'r').readlines()
             NameOrder,Name2Col=self._parse_header(data[0])
             data=data[1:]

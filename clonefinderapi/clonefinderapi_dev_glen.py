@@ -1,9 +1,9 @@
-from parsers.DefaultTSPParser import DefaultTSPParser
+from parsers.AncestreeTSPParser import AncestreeTSPParser
 from alignments.FreqToMegaSeq import FreqToMegaSeq
 
 if __name__ == "__main__":
-    filename = '/home/gstecher/Documents/NetBeansProjects/CloneFinderAPI/dev/copyNumberVariation.txt'
-    parser = DefaultTSPParser()
+    filename = '/home/gstecher/Documents/NetBeansProjects/CloneFinderAPI/dev/ancestree_input.txt'
+    parser = AncestreeTSPParser()
     parser.input_data_file = filename
     if parser.parse() == False:
         print parser.messages
@@ -13,5 +13,5 @@ if __name__ == "__main__":
         alignment_builder.initialize(profile_list)
         mega_alignment = alignment_builder.get_mega_alignment_string()
         print mega_alignment
-        alignment_builder.save_mega_alignment_to_file('/home/gstecher/Documents/NetBeansProjects/CloneFinderAPI/dev/copyNumberVariation.meg')
+        alignment_builder.save_mega_alignment_to_file('/home/gstecher/Documents/NetBeansProjects/CloneFinderAPI/dev/ancestree_input.meg')
     

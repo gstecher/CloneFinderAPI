@@ -33,7 +33,6 @@ class TumorSampleProfileList(object):
                 line = line + str(profile.ref_count(index)) + "\t" + str(profile.alt_count(index)) + "\t"
             index += 1            
             result = result + line + "\n"
-#            result.strip()
         return result
             
     def _text_header(self):
@@ -50,7 +49,7 @@ class TumorSampleProfileList(object):
         
     
     def get_profile(self, index):
-        if (index >= 0) and (index < len(self._tumor_profiles)):
+        if (index >= 0) and (index < len(self.tumor_profiles)):
             return self.tumor_profiles[index]
         IndexError('index out of bounds')
         
