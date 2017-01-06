@@ -5,7 +5,10 @@ class TumorSampleProfile(object):
     """
             
     def __init__(self, name):
-        self.name = name
+        if name != '':
+            self.name = name
+        else:
+            self.name = 'SNVs'
         self._read_counts = []
         
     def __iter__(self):

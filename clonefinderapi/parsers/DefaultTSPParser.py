@@ -54,10 +54,12 @@ class DefaultTSPParser(AbstractTSPParser):
               i=i.strip().split('\t')
               for Tu in Name2Col:
                   Tu2Freq[Tu].append(i[Name2Col[Tu]])
-            self._build_tumor_sample_profile_list(Tu2Freq)
-            print self.tumor_sample_profiles.to_string()
+            self._build_tumor_sample_profile_list(Tu2Freq)            
             return True
         except Exception as e:
             self._messages.append(str(e))
             return False
+        
+    def get_tumor_sample_profile_list(self):
+        return self.tumor_sample_profiles
     
