@@ -12,7 +12,7 @@ class TumorSampleProfile(object):
         self._read_counts = []
         
     def __iter__(self):
-        return iter(self.read_counts)
+        return iter(self._read_counts)
         
     @property
     def name(self):
