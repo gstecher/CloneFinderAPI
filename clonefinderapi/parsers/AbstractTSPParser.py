@@ -25,6 +25,3 @@ class AbstractTSPParser(object):
     def input_data_file(self, value):
         self._input_data_file = value
         
-    @property
-    def tumor_sample_profiles(self):
-        return self.tumor_sample_profiles
