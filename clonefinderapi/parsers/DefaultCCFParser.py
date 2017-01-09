@@ -3,6 +3,9 @@ from cancer_cell_fractions.CancerCellFraction import CancerCellFraction
 import os.path
 
 class DefaultCCFParser(AbstractCCFParser):
+    """
+        Parser for ccf text files wich generates a CancerCellFractionList
+    """
     
     def _parse_header(self, header):
         header = header.strip().split("\t")

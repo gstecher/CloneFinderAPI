@@ -1,5 +1,9 @@
 class CancerCellFraction(object):
     
+    """
+        Encapsulation of data contained in ccf text files
+    """
+    
     def __init__(self):
         self._ecm1 = 0.0
         self._ecm2 = 0.0

@@ -1,4 +1,7 @@
 class CancerCellFractionList(object):
+    """
+        A container for a collection of cancer cell fraction data
+    """
     
     def __init__(self):
         self._fraction_list = []
