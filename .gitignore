@@ -87,3 +87,13 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# additional stuffclonefinderapi/clonefinderapi_dev_temp.py
+dev/.~lock.Code.docx#
+dev/ancestree_input.meg
+dev/ccf2.tsv
+dev/copyNumberVariation.meg
+nb-configuration.xml
+clonefinderapi/clonefinderapi_dev_temp.py
+
+

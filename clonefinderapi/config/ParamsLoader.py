@@ -3,12 +3,15 @@ from parsers.ParamsParser import ParamsParser
 import os.path
 import sys
 
+clone_finder_params = None # used as a global instance of the params object
+
 class ParamsLoader(object):
     """
         Loads command-line parameters and parses the options.ini file
     """
     
     def __init__(self):
+        global clone_finder_params
         self._params_file = 'options.ini'
         
     @property 
@@ -41,6 +44,7 @@ class ParamsLoader(object):
             result.cnv_data_file = sys.argv[2][:-4]+'-CNV.txt'
         else: 
             print 'the command should be python CloneFinder.py snv [input]\npython CloneFinder.py ccf [input]\n or\npython CloneFinder.py cnv [input]\n or \npython CloneFinder.py cnv-post [input]'   	
-        result.input_id = sys.argv[2].split('/')[-1][:-4]        
-        return result
+        result.input_id = sys.argv[2].split('/')[-1][:-4]   
+        clone_finder_params = result
+        return clone_finder_params
     

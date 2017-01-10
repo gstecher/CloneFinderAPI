@@ -15,8 +15,8 @@ class FreqToMegaSeq:
         
     def initialize(self, tumor_sample_profiles, remove_duplicates = True):
         self._mega_seqs.append('#MEGA')
-        self._mega_seqs.append('!Title ' + tumor_sample_profiles.name)
-        self._mega_seqs.append('Format datatype=dna')
+        self._mega_seqs.append('!Title ' + tumor_sample_profiles.name + ';')
+        self._mega_seqs.append('!Format datatype=dna' + ';')
         self._mega_seqs.append(' ')
         num_sites = tumor_sample_profiles.num_read_counts()
         hg19 = self._get_hg19_sequence(num_sites)
