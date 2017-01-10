@@ -1,6 +1,7 @@
 from tsp_profiles.TumorSampleProfileList import TumorSampleProfileList
 from tsp_profiles.TumorSampleProfile import TumorSampleProfile
 from parsers.DefaultTSPParser import DefaultTSPParser
+from tsp_profiles.ReadCount import ReadCount
 import numpy
 
 class BinomialReplicater(object):
@@ -10,51 +11,26 @@ class BinomialReplicater(object):
         Total read count and SNV frequency is obtained from Original TumorSampleProfile.
         Binomial distribution is used.		
     """
-    def __init__(self, rep_number, tsp_list, input_order):
-        self.RepNum = rep_number 
-        self.tsp_list = tsp_list
-        self.input_order = input_order		
+    def __init__(self, tsp_list):
+        self.tsp_list = tsp_list	
 		
 
-    def make_rep(self, tsp_list, input_order):
-        RepID=1
-        input_header = ''
-       # print self.input_order		
-        for input in self.input_order:		
-            input_header += input+'\t'
-        input_header = input_header[:-1]+'\n'			
-		
-        while RepID<=self.RepNum:
-            newinput={}
-            out=input_header			
-         #   print out
+    def make_rep(self):
+            self.newtumor_sample_profiles = TumorSampleProfileList()        		 
             for profile in self.tsp_list: 
-                tumor = vars(profile)['_name']	
-             #   print tumor				
-                ref_list=[]
-                alt_list=[]				
+                tumor = profile._name
+                if self.newtumor_sample_profiles.profile_exists(tumor) == False:
+                    newprofile = TumorSampleProfile(tumor)
+                    self.newtumor_sample_profiles.add(newprofile)
+                read_count = ReadCount()								
                 for read_count in profile:
-                     alt_count = vars(read_count)['_num_alt']
-                     ref_count = vars(read_count)['_num_ref']
-                     total_count=alt_count + ref_count
-                     alt_freq=1.0*alt_count/total_count	
+                     total_count=read_count.total()
+                     alt_freq=read_count.alt_frequency()
                      newalt_count =numpy.random.binomial(total_count, alt_freq, size=None)
                      newref_count = total_count - newalt_count
-                     alt_list.append(str(newalt_count))
-                     ref_list.append(str(newref_count))
-                newinput[tumor+':ref']=ref_list	
-                newinput[tumor+':alt']=alt_list	
-            snv_num = len(ref_list)
-            snv_id = 0
-            while snv_id <snv_num:
-                for input in self.input_order:
-                    out += newinput[input][snv_id]+'\t'
-                out = out[:-1]+'\n'
-                snv_id += 1	
-
-            destination = open('BinoRep'+str(RepID)+'.txt','w')
-            destination.write(out)
-            destination.close()   			
-            RepID+=1
-
-     	
+                     read_count.num_ref = newref_count
+                     read_count.num_alt = newalt_count               
+                     newprofile.add(read_count)
+                     					 
+            return self.newtumor_sample_profiles 					 
+   
