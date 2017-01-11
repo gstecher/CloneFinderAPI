@@ -17,12 +17,12 @@ class ReadCount(object):
     def ref_frequency(self):
         if self.total() == 0:
             return 0.0
-        return self._numRef / self.total()
+        return 1.0 * self._num_ref / self.total()
 
     def alt_frequency(self):
         if self.total() == 0:
-            return 0.0
-        return self._numAlt / self.total()
+            return 0.0		
+        return 1.0 * self._num_alt / self.total()
     
     @property
     def id(self):
