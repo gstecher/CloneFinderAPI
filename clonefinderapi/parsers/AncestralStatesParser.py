@@ -44,9 +44,9 @@ class AncestralStatesParser(object):
             while index < len(lines):
                 self._parse_line(lines[index])
                 index += 1
-            result = (self._ancestral_states.num_taxa > 3)    
+            result = (self._ancestral_states.num_nodes > 3)    
             if result == True:
-                print 'successfully parsed ancestral states file: ' + str(self._ancestral_states.num_taxa) + ' taxa'
+                print 'successfully parsed ancestral states file: ' + str(self._ancestral_states.num_nodes) + ' taxa'
             else:
                 print 'failed to parse ancestral states file'
             return result

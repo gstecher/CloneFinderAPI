@@ -1,5 +1,6 @@
 from alignments.FreqToMegaSeq import FreqToMegaSeq
 from parsers.AncestralStatesParser import AncestralStatesParser
+from MakeAncSeqMPMin import MakeAncSeqMPMin
 import os
 import tempfile
 
@@ -26,7 +27,11 @@ class MegaSimpleMP(object):
         self._newick_trees = []
         self._temp_dir = tempfile.gettempdir() + os.sep
         
+    def __del__(self):
+        self._cleanup_temp_files()
+        
     def do_mega_mp(self, alignment_builder, mega_id):
+        
         print 'constructing MP tree'
         result = False
         self._update_file_names(mega_id)        
@@ -43,7 +48,6 @@ class MegaSimpleMP(object):
                 self._newick_trees.append(line)
             nf.close()
             self._retrieve_ancestral_states()
-            self._cleanup_temp_files()
         return result
         
     def _update_file_names(self, mega_id):        
@@ -64,14 +68,16 @@ class MegaSimpleMP(object):
             if not parser.parse() == True:
                 IOError('failed to parse ancestral states file')
             states_list = parser.get_ancestral_states()
-            self._ancestral_states_list.append(states_list)
-            os.remove(file)
+            self._ancestral_states_list.append(states_list)            
         
     def _cleanup_temp_files(self):    
         os.remove(self._alignment_file)
         os.remove(self._newick_file)
         summary_file = self._temp_dir + self._mega_id + '_summary.txt'
         os.remove(summary_file)
+        files = self._get_ancestral_states_files()
+        for file in files:
+          os.remove(file)
         
     @property
     def mao_file(self):
@@ -109,13 +115,19 @@ class MegaSimpleMP(object):
     
     @property
     def num_trees(self):
-        return len(self._ancestral_states_files)
+        return len(self._ancestral_states_list)
     
     @property 
     def ancestral_states_list(self):
         return self._ancestral_states_list
-    
+        
     @property 
     def newick_trees(self):
         return self._newick_trees
-        
+    
+    def alignment_least_back_parallel_muts(self, remove_duplicates = True):
+        print 'finding alignment with least parallel and back mutations...'
+        files = self._get_ancestral_states_files()
+        seq_maker = MakeAncSeqMPMin()
+        result = seq_maker.get_best_alignment(files, self._mega_id, remove_duplicates)           
+        return result
