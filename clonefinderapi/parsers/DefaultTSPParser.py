@@ -6,27 +6,32 @@ import os.path
 class DefaultTSPParser(AbstractTSPParser):
            
     def _parse_header(self, header):
+        print 'parsing header...'
         self._init_profile_list(header)
-        header = header.strip().split('\t')
+        header = header.strip().split()
         Len=len(header)
         c=0
         Name2Col={}
         NameOrder=[]	
         while c<Len:
             Name2Col[header[c]]=c
-            NameOrder.append(header[c])		
+            NameOrder.append(header[c])	            
             c+=1
+        print 'header parsed'
         return NameOrder,Name2Col         
    
     def _init_profile_list(self, header):
-        header = header.strip().split('\t')
+        print 'initializing...'
+        header = header.strip().split()
         for segment in header:
             sample_name = segment[:-4]            
             if self.tumor_sample_profiles.profile_exists(sample_name) == False:
                 profile = TumorSampleProfile(sample_name)
                 self.tumor_sample_profiles.add(profile)
+        print 'initialized'
         
     def _build_tumor_sample_profile_list(self, profile_data):
+        print 'building profile list...'
         for profile in self.tumor_sample_profiles:
             ref_col_name = profile.name + ':ref'
             alt_col_name = profile.name + ':alt'
@@ -39,9 +44,11 @@ class DefaultTSPParser(AbstractTSPParser):
                 read_count.num_alt = int(alt_data[index])                
                 profile.add(read_count)
                 index += 1
+        print 'profile list is built'
 
     def parse(self):                
         try:
+            print 'parsing input data file...'
             if os.path.isfile(self._input_data_file) == False:
                 IOError('input data file not found')    
             self.tumor_sample_profiles.name = os.path.basename(self._input_data_file)
@@ -52,10 +59,13 @@ class DefaultTSPParser(AbstractTSPParser):
             for Tu in NameOrder:
               Tu2Freq[Tu]=[]
             for i in data:
-              i=i.strip().split('\t')
-              for Tu in Name2Col:
-                  Tu2Freq[Tu].append(i[Name2Col[Tu]])
-            self._build_tumor_sample_profile_list(Tu2Freq)            
+                if i.strip() == '':
+                    continue
+                i=i.strip().split()
+                for Tu in Name2Col:
+                    Tu2Freq[Tu].append(i[Name2Col[Tu]])
+            self._build_tumor_sample_profile_list(Tu2Freq)   
+            print 'parsing completed'
             return True
         except Exception as e:
             self._messages.append(str(e))
