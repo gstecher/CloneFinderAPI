@@ -1,3 +1,4 @@
+from output.CloneFrequencyWriter import CloneFrequencyWriter
 import scipy.optimize
 import numpy
 
@@ -7,9 +8,10 @@ class CloneFrequencyComputer(object):
         
         M x F = v_obs	
     """
-    def __init__(self, MEGAalignment, tsp_list):
+    def __init__(self, MEGAalignment, tsp_list, cutoff_clone_frequency):
         self.M = MEGAalignment 
         self.tsp_list = tsp_list
+        self.CutOff = cutoff_clone_frequency		
 ######		
         self.v_obs = {}
         for profile in self.tsp_list: 
@@ -63,7 +65,15 @@ class CloneFrequencyComputer(object):
             Tumor2Clone2Freq['T-'+tumor]={}
             clone_id = 0
             for clone in self.clone_order:
-                Tumor2Clone2Freq['T-'+tumor][clone[1:]] = clone_frequency[clone_id]*2
+                if 	clone_frequency[clone_id] > self.CutOff	: Fre = clone_frequency[clone_id]
+                else: Fre = 0				
+                Tumor2Clone2Freq['T-'+tumor][clone[1:]] = Fre*2
                 clone_id += 1
-        return Tumor2Clone2Freq				
+        Out = CloneFrequencyWriter(Tumor2Clone2Freq, self.M, 0)	
+        OutAlign, OutCloFre = Out.get_hitclone()
+       # print OutCloFre, '\n', Tumor2Clone2Freq, '\n', clone_frequency 		
+        return OutAlign, OutCloFre
+
+
+        	
             			

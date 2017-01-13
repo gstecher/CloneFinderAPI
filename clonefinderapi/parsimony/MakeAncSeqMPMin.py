@@ -1,3 +1,5 @@
+from alignments.MegaAlignment import MegaAlignment
+from parsimony.TreeAnalizer import TreeAnalizer
 class MakeAncSeqMPMin(object):
     
     def __init__(self):
@@ -12,6 +14,10 @@ class MakeAncSeqMPMin(object):
         Anc2Seq={}
         TaxaLs=[]	
         outNodeMap='Index\tLabel\tDec_1\tDec_2\n'	
+        D2Ain={}
+        A2Din={}
+        N2Cin={}
+        C2Nin={}		
         for Li in Ls:
            if Li!=[]:        	   
             Anc=Li[0]
@@ -51,7 +57,18 @@ class MakeAncSeqMPMin(object):
               for Dec0 in Decs:
                   Code=Dec0 in Done		  
                   if Dec0!=Dec and Code!=True: Dec2=Dec0
-              if InIndex!=NormalIndex and Dec1!=NormalIndex and Dec2!=NormalIndex: outNodeMap+=InIndex+'\t'+Index2Lab[InIndex]+'\t'+Dec1+'\t'+Dec2+'\n'
+              if InIndex!=NormalIndex and Dec1!=NormalIndex and Dec2!=NormalIndex: 
+                    outNodeMap+=InIndex+'\t'+Index2Lab[InIndex]+'\t'+Dec1+'\t'+Dec2+'\n'
+                    D2Ain[Dec1]=InIndex
+                    D2Ain[Dec2]=InIndex					
+                    A2Din[InIndex]=[Dec1,Dec2]
+					
+                    if Index2Lab[InIndex]!='-':					
+                      N2Cin[Index2Lab[InIndex]]=InIndex
+                      C2Nin[InIndex]=Index2Lab[InIndex]
+                    else:					  
+                      N2Cin['Node'+InIndex+'S0T'+SetN]=InIndex
+                      C2Nin[InIndex]='Node'+InIndex+'S0T'+SetN						
               Done.append(InIndex)		  
               NewDecLs.append(Dec1)
               Down.append(Dec2)
@@ -63,7 +80,17 @@ class MakeAncSeqMPMin(object):
               for Dec0 in Decs:
                   Code=Dec0 in Done		  
                   if Code!=True: Dec2=Dec0		  
-              if InIndex!=NormalIndex and Dec1!=NormalIndex and Dec2!=NormalIndex: outNodeMap+=InIndex+'\t'+Index2Lab[InIndex]+'\t'+Dec1+'\t'+Dec2+'\n'
+              if InIndex!=NormalIndex and Dec1!=NormalIndex and Dec2!=NormalIndex: 
+                    outNodeMap+=InIndex+'\t'+Index2Lab[InIndex]+'\t'+Dec1+'\t'+Dec2+'\n'
+                    D2Ain[Dec1]=InIndex
+                    D2Ain[Dec2]=InIndex					
+                    A2Din[InIndex]=[Dec1,Dec2]
+                    if Index2Lab[InIndex]!='-':					
+                      N2Cin[Index2Lab[InIndex]]=InIndex
+                      C2Nin[InIndex]=Index2Lab[InIndex]
+                    else:					  
+                      N2Cin['Node'+InIndex+'S0T'+SetN]=InIndex
+                      C2Nin[InIndex]='Node'+InIndex+'S0T'+SetN							
               Done.append(InIndex)
               Down+=[Dec1,Dec2]
           DecLs=NewDecLs
@@ -85,19 +112,36 @@ class MakeAncSeqMPMin(object):
               Code=Anc in A2D
               if Code==True:
                  Decs=A2D[Anc]	 
-                 if Anc!=NormalIndex and Decs[0]!=NormalIndex and Decs[1]!=NormalIndex: outNodeMap+=Anc+'\t'+Index2Lab[Anc]+'\t'+Decs[0]+'\t'+Decs[1]+'\n'
+                 if Anc!=NormalIndex and Decs[0]!=NormalIndex and Decs[1]!=NormalIndex: 
+                    outNodeMap+=Anc+'\t'+Index2Lab[Anc]+'\t'+Decs[0]+'\t'+Decs[1]+'\n'
+                    D2Ain[Decs[0]]=Anc
+                    D2Ain[Decs[1]]=Anc					
+                    A2Din[Anc]=[Decs[0],Decs[1]]
+                    if Index2Lab[Anc]!='-':					
+                      N2Cin[Index2Lab[Anc]]=Anc
+                      C2Nin[Anc]=Index2Lab[Anc]
+                    else:					  
+                      N2Cin['Node'+Anc+'S0T'+SetN]=Anc
+                      C2Nin[Anc]='Node'+Anc+'S0T'+SetN					
                  NewDown+=Decs
            Down=NewDown			 			
         self._get_out(self.ID+'_NodeMap'+SetN+'.txt',outNodeMap)
-        self._get_out(self.ID+'_NodeMap.txt',outNodeMap)	
-        return TaxaLs,'AA',SeqLs,Anc2Seq,Len,Root    
+        self._get_out(self.ID+'_NodeMap.txt',outNodeMap)
+        NadeMapInfo=[D2Ain,A2Din,N2Cin,C2Nin]		
+        return TaxaLs,NadeMapInfo,SeqLs,Anc2Seq,Len,Root    
         
-    def get_best_alignment(self, files, ID, remove_redundant):        
+    def get_best_alignment(self, files, ID, remove_redundant, tree_list): 
+        TreeAnalyze = TreeAnalizer()	
+        Align = MegaAlignment()	
         SetID=0
         self.ID = ID
-        out='#MEGA\n!Title SNVs;\n!Format datatype=dna;\n\n'
+
         file_index = 0
+       # best_SetID=0
+        SetID2out={}
+        SetID2goodposi={}		
         while file_index < len(files):
+            out=['#MEGA','!Title SNVs;','!Format datatype=dna;']		
             AncFile = files[file_index]
             print 'processing file: ' + AncFile
             AncFile=open(AncFile,'r').readlines()
@@ -111,7 +155,7 @@ class MakeAncSeqMPMin(object):
                     for ii in i:
                         if ii!='': In.append(ii)
                     Lines.append(In)				
-            TaxaLs,Anc2Cou,AncSeqLs,Anc2Seq,Len,Root=self.GetRel(Lines,str(SetID))
+            TaxaLs,NadeMapInfo,AncSeqLs,Anc2Seq,Len,Root=self.GetRel(Lines,str(SetID))
             c=0  	
             while c<Len: #add node sequences
                 for Anc in AncSeqLs:
@@ -123,14 +167,22 @@ class MakeAncSeqMPMin(object):
             for Anc in Anc2Seq:
               if Anc.split('.')[0]!=Root:
                Code=Anc in TaxaLs	  
-               if Code==True:out+='#'+Anc+'\n'+Anc2Seq[Anc]+'\n'	
+               if Code==True:out+=['#'+Anc,Anc2Seq[Anc]]	
                else:	   
-                out+='#Node'+Anc.replace('.','S')+'T'+str(SetID)+'\n'+Anc2Seq[Anc]+'\n'	
+                out+=['#Node'+Anc.replace('.','S')+'T'+str(SetID),Anc2Seq[Anc]]
+            print out, NadeMapInfo				
+            Good_posi_info, mask_seq, All_posi_info = TreeAnalyze.RmUnresolvedPosi(out, NadeMapInfo, tree_list[SetID])
+            SetID2out[SetID]=[out, NadeMapInfo, mask_seq, Good_posi_info, All_posi_info]
+            SetID2goodposi[SetID]=Good_posi_info			
             SetID+=1
             file_index += 1
+        print '\n\nall set',SetID2goodposi			
+        best_SetID=TreeAnalyze.find_best_set(SetID2goodposi)
+        best_outset=SetID2out[best_SetID]
+        outseq=	best_outset[0]	
         if remove_redundant:
-            out = self._remove_redund_seqs(out)
-        return out  
+            outseq = self._remove_redund_seqs(outseq)
+        return outseq, tree_list[best_SetID], best_outset[1], best_outset[2], best_outset[4] #NadeMapInfo, mask_seq, Good_posi_info]
     
     def _read_mega_seq(self, MegStr): 
         print 'reading mega file...'
@@ -154,7 +206,10 @@ class MakeAncSeqMPMin(object):
     
     def _remove_redund_seqs(self, Meg):
         print 'removing redundant seqs...'
-        NameOrder, Name2Seq, out2=self._read_mega_seq(Meg)
+        Align = MegaAlignment()		
+        NameOrder, Name2Seq=Align.name2seq(Meg)#self._read_mega_seq(Meg)
+       # print Name2Seq		
+        out2 = 	['#MEGA','!Title SNVs;','!Format datatype=dna;']	
         c=0
         Name2IdenLs={}
         SeqNum=len(NameOrder)
@@ -188,7 +243,7 @@ class MakeAncSeqMPMin(object):
                 elif i.find('Node')!=-1: pass 
                 elif i.find('Clu')!=-1 and GoodName.find('Clu')!=-1 and i.find('REP')!=-1 and GoodName.find('REP')==-1: GoodName=i 		
                 else: pass
-            out2+=GoodName+'\n'+Name2Seq[Name]+'\n'		
+            out2+=[GoodName,Name2Seq[Name]]		
             Done+=IdenLs
         
         return out2 
