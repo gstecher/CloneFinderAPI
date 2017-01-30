@@ -125,8 +125,8 @@ class MakeAncSeqMPMin(object):
                       C2Nin[Anc]='Node'+Anc+'S0T'+SetN					
                  NewDown+=Decs
            Down=NewDown			 			
-        self._get_out(self.ID+'_NodeMap'+SetN+'.txt',outNodeMap)
-        self._get_out(self.ID+'_NodeMap.txt',outNodeMap)
+      #  self._get_out(self.ID+'_NodeMap'+SetN+'.txt',outNodeMap)
+       # self._get_out(self.ID+'_NodeMap.txt',outNodeMap)
         NadeMapInfo=[D2Ain,A2Din,N2Cin,C2Nin]		
         return TaxaLs,NadeMapInfo,SeqLs,Anc2Seq,Len,Root    
         
@@ -137,10 +137,15 @@ class MakeAncSeqMPMin(object):
         self.ID = ID
 
         file_index = 0
-       # best_SetID=0
+
         SetID2out={}
-        SetID2goodposi={}		
-        while file_index < len(files):
+        SetID2goodposi={}
+
+        if 	len(files)< len(tree_list): Len0=len(files)
+        else: 	Len0=len(tree_list)
+
+        while file_index < Len0:
+
             out=['#MEGA','!Title SNVs;','!Format datatype=dna;']		
             AncFile = files[file_index]
             print 'processing file: ' + AncFile
@@ -170,18 +175,20 @@ class MakeAncSeqMPMin(object):
                if Code==True:out+=['#'+Anc,Anc2Seq[Anc]]	
                else:	   
                 out+=['#Node'+Anc.replace('.','S')+'T'+str(SetID),Anc2Seq[Anc]]
-            print out, NadeMapInfo				
+		
             Good_posi_info, mask_seq, All_posi_info = TreeAnalyze.RmUnresolvedPosi(out, NadeMapInfo, tree_list[SetID])
             SetID2out[SetID]=[out, NadeMapInfo, mask_seq, Good_posi_info, All_posi_info]
             SetID2goodposi[SetID]=Good_posi_info			
             SetID+=1
             file_index += 1
-        print '\n\nall set',SetID2goodposi			
+		
         best_SetID=TreeAnalyze.find_best_set(SetID2goodposi)
+	
         best_outset=SetID2out[best_SetID]
         outseq=	best_outset[0]	
         if remove_redundant:
             outseq = self._remove_redund_seqs(outseq)
+		
         return outseq, tree_list[best_SetID], best_outset[1], best_outset[2], best_outset[4] #NadeMapInfo, mask_seq, Good_posi_info]
     
     def _read_mega_seq(self, MegStr): 
@@ -207,8 +214,8 @@ class MakeAncSeqMPMin(object):
     def _remove_redund_seqs(self, Meg):
         print 'removing redundant seqs...'
         Align = MegaAlignment()		
-        NameOrder, Name2Seq=Align.name2seq(Meg)#self._read_mega_seq(Meg)
-       # print Name2Seq		
+        NameOrder, Name2Seq=Align.name2seq(Meg)
+	
         out2 = 	['#MEGA','!Title SNVs;','!Format datatype=dna;']	
         c=0
         Name2IdenLs={}

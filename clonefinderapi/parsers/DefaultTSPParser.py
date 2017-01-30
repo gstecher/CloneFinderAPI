@@ -14,6 +14,7 @@ class DefaultTSPParser(AbstractTSPParser):
         Name2Col={}
         NameOrder=[]	
         while c<Len:
+          #if header[c].find(':ref')!=-1 or header[c].find(':alt')!=-1:		
             Name2Col[header[c]]=c
             NameOrder.append(header[c])	            
             c+=1
@@ -63,6 +64,7 @@ class DefaultTSPParser(AbstractTSPParser):
                     continue
                 i=i.strip().split()
                 for Tu in Name2Col:
+                  #if Tu.find(':ref')!=-1 or Tu.find(':alt')!=-1:				
                     Tu2Freq[Tu].append(i[Name2Col[Tu]])
             self._build_tumor_sample_profile_list(Tu2Freq)   
             print 'parsing completed'

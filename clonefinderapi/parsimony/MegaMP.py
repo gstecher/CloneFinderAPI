@@ -37,10 +37,10 @@ class MegaMP(object):
         print 'constructing MP tree'
         result = False
         self._update_file_names(mega_id)
-        print self._alignment_file		
+      #  print self._alignment_file		
         Align = MegaAlignment()
         Align.save_mega_alignment_to_file(self._alignment_file, alignment_builder)       		
-     #   alignment_builder.save_mega_alignment_to_file(self._alignment_file)
+
         cl = self._command_line_string()
         os.system(cl)
         if os.path.isfile(self._newick_file) == True:
@@ -134,6 +134,6 @@ class MegaMP(object):
         print 'finding alignment with least parallel and back mutations...'
         files = self._get_ancestral_states_files()
         seq_maker = MakeAncSeqMPMin()
-       # print self.newick_trees		
+	
         result = seq_maker.get_best_alignment(files, self._mega_id, remove_duplicates, self.newick_trees)           
         return result

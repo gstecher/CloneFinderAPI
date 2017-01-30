@@ -11,10 +11,10 @@ class BinomialReplicater(object):
         Total read count and SNV frequency is obtained from Original TumorSampleProfile.
         Binomial distribution is used.		
     """
+	
     def __init__(self, tsp_list):
         self.tsp_list = tsp_list	
 		
-
     def make_rep(self):
             self.newtumor_sample_profiles = TumorSampleProfileList()        		 
             for profile in self.tsp_list: 

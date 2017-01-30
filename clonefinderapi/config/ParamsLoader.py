@@ -2,7 +2,7 @@ from config.CloneFinderParams import CloneFinderParams
 from parsers.ParamsParser import ParamsParser
 import os.path
 import sys
-
+from config.FormatInput import FormatInput
 clone_finder_params = None # used as a global instance of the params object
 
 class ParamsLoader(object):
@@ -24,6 +24,7 @@ class ParamsLoader(object):
     
     def load_params(self):    
         parser = ParamsParser()
+        adjust_format = FormatInput()		
         if os.path.isfile(self._params_file) == False:
             Exception("The required config.ini file is missing.")        
         result = parser.parse_config_file(self._params_file)        
@@ -31,20 +32,24 @@ class ParamsLoader(object):
         Data = sys.argv[1]
         result.data_format = Data
         if Data=='snv': 
-            result.input_data_file = sys.argv[2]            
+            result.snv_data_file = sys.argv[2]  
+            adjust_format.snv2snv(result.snv_data_file)			
+            result.input_data_file = sys.argv[2][:-4]+'snv.txt'			
         elif Data=='ccf': 
             result.ccf_data_file = sys.argv[2]
-            result.read_coverage= sys.argv[3]	
-            result.snv_data_file = sys.argv[2][:-4]+'snv.txt'
+            result.read_coverage= sys.argv[3]
+            adjust_format.ccf2snv(result.ccf_data_file, result.read_coverage)			
+            result.input_data_file = sys.argv[2][:-4]+'snv.txt'
         elif Data=='cnv':
             result.input_data_file0 = sys.argv[2]
-            result.input_data_file = sys.argv[2][:-4]+'Adj.txt'
-        elif Data=='cnv-post':
-            result.input_data_file = sys.argv[2]    	
             result.cnv_data_file = sys.argv[2][:-4]+'-CNV.txt'
+            adjust_format.cnv2snv(result.input_data_file0, result.cnv_data_file)	      			
+            result.input_data_file = sys.argv[2][:-4]+'snv.txt'			
+
         else: 
             print 'the command should be python CloneFinder.py snv [input]\npython CloneFinder.py ccf [input]\n or\npython CloneFinder.py cnv [input]\n or \npython CloneFinder.py cnv-post [input]'   	
-        result.input_id = sys.argv[2].split('/')[-1][:-4]   
+
+        result.input_id = sys.argv[2][:-4]		
         clone_finder_params = result
         return clone_finder_params
     

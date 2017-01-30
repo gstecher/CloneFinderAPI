@@ -12,7 +12,7 @@ class tsp_information():
     """
     def __init__(self, tsp_list):
         self.tsp_list = tsp_list
-       # self.target_tsp = target_tsp		
+
     def make_single_tsp_list(self, target_tsp):
             single_sample_profiles = TumorSampleProfileList()        		 
             for profile in self.tsp_list: 
@@ -21,7 +21,7 @@ class tsp_information():
                     if single_sample_profiles.profile_exists(tumor) == False:
                         newprofile = TumorSampleProfile(tumor)
                         single_sample_profiles.add(newprofile)
-                    #read_count = ReadCount()								
+							
                     for read_count in profile:             
                          newprofile.add(read_count)
                      					 
