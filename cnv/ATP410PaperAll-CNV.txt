@@ -1,0 +1,10 @@
+PrimT:ref	PrimT:alt	Met1T:ref	Met1T:alt	Met2T:ref	Met2T:alt
+1	1	0	2	1	1	
+1	1	1	1	1	1	
+1	1	1	1	1	1	
+1	1	1	1	1	1	
+1	1	1	1	1	1	
+1	1	1	1	1	1	
+1	1	1	1	1	1	
+1	1	1	1	1	1	
+0	2	1	1	1	2	

@@ -6,14 +6,18 @@ class FormatInput():
         CCF=ccf_file
         ReadCov=float(read_coverage)
         Out=CCF[:-4]+'snv.txt'
+        OutCNV=CCF[:-4]+'snv-CNV.txt'		
         
         Tu2CCF=self.ListColStr(CCF)
         TuOrder=[]
         out=''
+        outCNV=''		
         for Tu in Tu2CCF:
             TuOrder.append(Tu)
             out+=Tu+':ref\t'+Tu+':alt\t'
+            outCNV+=Tu+'\t'			
         out=out[:-1]+'\n'
+        outCNV=outCNV[:-1]+'\n'		
         Len=len(Tu2CCF[Tu])
 
         c=0
@@ -22,9 +26,12 @@ class FormatInput():
                 Mut=int(ReadCov*float(Tu2CCF[Tu][c])/2)
                 Ref=int(ReadCov-Mut)
                 out+=str(Ref)+'\t'+str(Mut)+'\t'
+                outCNV+='normal\t'				
             out=out[:-1]+'\n'
+            outCNV=outCNV[:-1]+'\n'			
             c+=1
         self.save_file(Out,out)
+        self.save_file(OutCNV,outCNV)		
 
     def ListColStr(self, File):
           File=open(File,'r').readlines()
@@ -74,23 +81,30 @@ class FormatInput():
             c+=1
         self.save_file(Out,out)	
 	
-    def snv2snv(self, Ta):
+    def snv2snv(self, Ta, CNVmake):
+	
         Out=Ta[:-4]+'snv.txt'
+        OutCNV=Ta[:-4]+'snv-CNV.txt'		
         Ta=open(Ta,'r').readlines()		
         SOrder, Samp2Col = self.GetHeadObsFreqTaHead(Ta[0].strip())
         out=''
+        outCNV=''		
         for Sample in SOrder:
             out+=Sample+':ref\t'+Sample+':alt\t'	
-        out=out[:-1]+'\n'			
+            outCNV+=Sample+'\t'			
+        out=out[:-1]+'\n'
+        outCNV=outCNV[:-1]+'\n'		
         Ta=Ta[1:]
         for i in Ta:		
             i=i.strip().split('\t')
             for S in SOrder:
                 out+=i[Samp2Col[S+':ref']]+'\t'+i[Samp2Col[S+':alt']]+'\t'
+                outCNV+='normal\t'				
             out=out[:-1]+'\n'
+            outCNV=outCNV[:-1]+'\n'			
             
         self.save_file(Out,out)	
-
+        if CNVmake=='withCNVfile': self.save_file(OutCNV,outCNV)
     def ObsFreqTaHead(self, Freq): 
       Freq=open(Freq,'r').readlines() 
       SampOrder,Name2Col=self.GetHeadObsFreqTaHead(Freq[0])

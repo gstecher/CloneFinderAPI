@@ -227,4 +227,31 @@ class MegaAlignment():
     def save_mega_alignment_to_file(self, filename, SeqLs):
         destination = open(filename,'w')
         destination.write(self.get_mega_alignment_string(SeqLs))
-        destination.close()        	  
+        destination.close()  
+
+    def add_cnv_genotype(self, tsp_list, Clone_frequency_file, clone_seq):
+         clone_order, clone2seq = self.name2seq(clone_seq)
+        # print 	Clone_frequency_file	 
+         for profile in tsp_list: 
+                tumor = profile.name
+              #  print tumor,Clone_frequency_file				
+                clone_frequency=Clone_frequency_file['T-'+tumor]
+                Lar=0
+                Derived_clone=''
+                for clone in clone_frequency:
+                   if clone_frequency[clone]>0:				
+                     Hitclone_seq=	clone2seq['#'+clone]
+                     Mut=0	
+                     Len=len(Hitclone_seq)
+                     c=0	
+                     while c<Len:
+                         if Hitclone_seq[c]=='T': Mut+=1
+                         c+=1
+                     if Mut>Lar:
+                         Lar=Mut
+                         Derived_clone=clone
+                der_seq=clone2seq['#'+Derived_clone]
+               # print tumor,Derived_clone				
+                clone_seq+=['#'+Derived_clone+'CNV'+tumor,der_seq]
+               # clone_order.append('#'+Derived_clone+'CNV'+tumor)
+         return clone_seq			   

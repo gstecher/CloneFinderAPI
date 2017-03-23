@@ -445,26 +445,27 @@ class MutationFilter:
            if DifC<=Min: Same='y'	   
         return Same		
     	
-    def ExtraHit(self, Meg,CloFre):
-        CloOrder, Clo2Seq, out2=Functions.ReadMegSeq(Meg)
-        Tu2HitCloLs,N2C,T2C2F=Functions.GetCloHitForTu(CloFre,0)
-        NewCloLs=[]
-        for Tu in Tu2HitCloLs:
-           NewCloLs+=Tu2HitCloLs[Tu]
-        NewCloLs=list(set(NewCloLs))
-        Functions.UpCloFreqTa1('',T2C2F,NewCloLs,CloFre[:-4]+'1.txt')
-        Functions.UpMeg(Clo2Seq,NewCloLs,'AA',Meg[:-4]+'1.meg')	
+  #  def ExtraHit(self, Meg,CloFre):
+   #     CloOrder, Clo2Seq, out2=Functions.ReadMegSeq(Meg)
+    #    Tu2HitCloLs,N2C,T2C2F=Functions.GetCloHitForTu(CloFre,0)
+     #   NewCloLs=[]
+      #  for Tu in Tu2HitCloLs:
+       #    NewCloLs+=Tu2HitCloLs[Tu]
+        #NewCloLs=list(set(NewCloLs))
+     #   Functions.UpCloFreqTa1('',T2C2F,NewCloLs,CloFre[:-4]+'1.txt')
+      #  Functions.UpMeg(Clo2Seq,NewCloLs,'AA',Meg[:-4]+'1.meg')	
     
     def MakeNewSeq(self, CloneLs,SeqDic,Type,Len,Tu2Seq):
+        Align=MegaAlignment()	  
         SelSeq={}
         TuSeqDic={}	
         for Clo in CloneLs: 
              SelSeq['#'+Clo]=SeqDic['#'+Clo]
              Tu=Clo.split('BraC')[0]		 
              TuSeqDic['#'+Tu]=Tu2Seq['#'+Tu]
-        TuMut=Functions.GetSharePosi1(TuSeqDic,'T')
+        TuMut=Align.GetSharePosi1(TuSeqDic,'T')
         if Type=='Min':	
-            MinSeqT=Functions.GetSharePosi1(SelSeq,'T')
+            MinSeqT=Align.GetSharePosi1(SelSeq,'T')
             Nseq=''
             c=0
             while c<Len:
@@ -474,7 +475,7 @@ class MutationFilter:
                else: Nseq+='A'
                c+=1		   
         elif Type=='Max':		
-            MaxSeqA=Functions.GetSharePosi1(SelSeq,'A')
+            MaxSeqA=Align.GetSharePosi1(SelSeq,'A')
             Nseq=''
             c=0
             while c<Len:

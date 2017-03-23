@@ -25,7 +25,7 @@ class MegaMP(object):
         self._num_trees = 0
         self._mega_id = ''
         self._ancestral_states_list = []
-        self._newick_trees = []
+        #self._newick_trees = []
         self._temp_dir = tempfile.gettempdir() + os.sep
         	
         
@@ -33,7 +33,7 @@ class MegaMP(object):
         self._cleanup_temp_files()
         
     def do_mega_mp(self, alignment_builder, mega_id):
-        
+        self._newick_trees = []       
         print 'constructing MP tree'
         result = False
         self._update_file_names(mega_id)
@@ -53,6 +53,7 @@ class MegaMP(object):
                 self._newick_trees.append(line)
             nf.close()
             self._retrieve_ancestral_states()
+      #  self._cleanup_temp_files()			
         return result
         
     def _update_file_names(self, mega_id):        
@@ -131,9 +132,10 @@ class MegaMP(object):
         return self._newick_trees
     
     def alignment_least_back_parallel_muts(self, remove_duplicates = True):
-        print 'finding alignment with least parallel and back mutations...'
+        print 'finding alignment with least parallel and back mutations...'#,self.newick_trees
         files = self._get_ancestral_states_files()
         seq_maker = MakeAncSeqMPMin()
 	
-        result = seq_maker.get_best_alignment(files, self._mega_id, remove_duplicates, self.newick_trees)           
+        result = seq_maker.get_best_alignment(files, self._mega_id, remove_duplicates, self.newick_trees)  
+        self._cleanup_temp_files()		
         return result

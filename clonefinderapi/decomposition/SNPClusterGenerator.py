@@ -150,7 +150,7 @@ class SNPClusterGenerator(Calculation):
     def cluster(self):
         self.tumor2clusters = {}
         self.snv_num = len(self.clone_seq[self.clone_order[0]])	
-
+        self.tumor2estSNV={}
         for tumor in self.v_obs:
             self.ObsSNVLs = self.v_obs[tumor]
 	
@@ -159,6 +159,7 @@ class SNPClusterGenerator(Calculation):
             else:
                 self.clone2frequency = self.Tu2CloFre[tumor]			
             self.Site2EstSNV = Calculation.compute_estimated_SNVfrequency(self)
+            self.tumor2estSNV[tumor]=self.Site2EstSNV			
             self.Exp2Diff2ObsSNVID = Calculation.compute_diff(self)			
             self.Exp2CluSNV = Calculation.GetExp2CluSNV(self) 
             Clu2Seq, Clu2EstSNVfre=Calculation.GetClu2Seq(self, tumor) #
@@ -178,4 +179,23 @@ class SNPClusterGenerator(Calculation):
             else: self.tumor2clusters[tumor]=[] 			   
         return self.tumor2clusters				
 
-
+    def estimatedSNV_save_to_file(self):
+        self.cluster()	
+        out=''
+        c=0
+        TuOrder=[]
+        out=''		
+        for tumor in self.tumor2estSNV:
+            TuOrder.append(tumor)
+            out+=tumor+':obs\t'+tumor+':est\t'
+        out=out[:-1]+'\n'			
+        while c<self.snv_num:
+           for tumor in TuOrder:		
+                out+=str(self.v_obs[tumor][c])+'\t'+str(self.tumor2estSNV[tumor][c])+'\t'
+           out=out[:-1]+'\n'
+           c+=1
+        return self.v_obs, self.tumor2estSNV 		   
+      #  OutF=open('EstObsSNVfreqTuAnc.txt','w')
+       # OutF.write(out)
+        #OutF.close()		
+           		   

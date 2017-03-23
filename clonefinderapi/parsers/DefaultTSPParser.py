@@ -56,17 +56,17 @@ class DefaultTSPParser(AbstractTSPParser):
             data = open(self._input_data_file, 'r').readlines()
             NameOrder,Name2Col=self._parse_header(data[0])
             data=data[1:]
-            Tu2Freq={}
+            self.Tu2Freq={}
             for Tu in NameOrder:
-              Tu2Freq[Tu]=[]
+              self.Tu2Freq[Tu]=[]
             for i in data:
                 if i.strip() == '':
                     continue
                 i=i.strip().split()
                 for Tu in Name2Col:
                   #if Tu.find(':ref')!=-1 or Tu.find(':alt')!=-1:				
-                    Tu2Freq[Tu].append(i[Name2Col[Tu]])
-            self._build_tumor_sample_profile_list(Tu2Freq)   
+                    self.Tu2Freq[Tu].append(i[Name2Col[Tu]])
+            self._build_tumor_sample_profile_list(self.Tu2Freq)   
             print 'parsing completed'
             return True
         except Exception as e:
@@ -75,4 +75,5 @@ class DefaultTSPParser(AbstractTSPParser):
         
     def get_tumor_sample_profile_list(self):
         return self.tumor_sample_profiles
-    
+
+	

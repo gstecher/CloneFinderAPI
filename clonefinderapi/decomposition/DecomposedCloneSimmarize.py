@@ -54,9 +54,11 @@ class DecomposedCloneSimmarize:
                         outAllSeq_without_redindant+=['#hg19',('A'*SNVNum)] 										
                         return outAllSeq_without_redindant						
 
-    def remove_ancestral_decomposed(self, remove_tumor_and_rename_decomposed_seq, Error_rate):
+    def remove_ancestral_decomposed(self, remove_tumor_and_rename_decomposed_seq, Error_rate, tumor_seqs):
+      #  print 'Tu',tumor_seqs	
         Align = MegaAlignment()
         SeqOrderIni, Meg2Seq= Align.name2seq(remove_tumor_and_rename_decomposed_seq)	
+        TuLs,Tu2Seq= Align.name2seq(tumor_seqs)		
         good_seq = 	['#MEGA','!Title SNVs;','!Format datatype=dna;',' '] 
         RmCluClo=[]		
         for name1 in SeqOrderIni:
@@ -72,10 +74,13 @@ class DecomposedCloneSimmarize:
                              if Additional_mut_num1==0: RmCluClo.append(name1)
                         else: 
                              if Der<Error_rate: RmCluClo.append(name1)
-					 
+        AddedTuLs=[]					 
         for Name in SeqOrderIni:
              if RmCluClo.count(Name)==0:
                   good_seq+=[Name,Meg2Seq[Name]]
+                  AddedTuLs.append(Name.split('Clu')[0])
+        for Tu in TuLs:
+           if AddedTuLs.count(Tu)==0:good_seq+=[Tu,Tu2Seq[Tu]] 		
         good_seq	+=['#hg19','A'*len(seq1)]				  
         return good_seq				  
             		
