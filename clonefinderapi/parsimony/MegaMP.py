@@ -76,14 +76,18 @@ class MegaMP(object):
             states_list = parser.get_ancestral_states()
             self._ancestral_states_list.append(states_list)            
         
-    def _cleanup_temp_files(self):    
-        os.remove(self._alignment_file)
-        os.remove(self._newick_file)
+    def _cleanup_temp_files(self):
+        if os.path.isfile(self._alignment_file):    
+            os.remove(self._alignment_file)
+        if os.path.isfile(self._alignment_file):
+            os.remove(self._newick_file)
         summary_file = self._temp_dir + self._mega_id + '_summary.txt'
-        os.remove(summary_file)
+        if os.path.isfile(summary_file):
+            os.remove(summary_file)
         files = self._get_ancestral_states_files()
         for file in files:
-          os.remove(file)
+            if os.path.isfile(file):            
+                os.remove(file)
         
     @property
     def mao_file(self):
