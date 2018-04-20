@@ -1,6 +1,0 @@
-Number of undecided positions:	209
-Number of affected somatic mutations:
-Number of mutation gain:	11
-Number of wild-type gain:	473
-Number of mutation loss:	8
-Number of LOH at mutation:	24
