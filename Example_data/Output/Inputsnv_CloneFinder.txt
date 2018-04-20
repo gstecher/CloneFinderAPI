@@ -1,0 +1,8 @@
+Tumor	Clone3	Clone2	Clone1	Clone7	Clone6	Clone5	Clone4
+T-R1	0	0	0	0	0	0.4	0.2
+T-R2	0	0	0	0.4	0	0	0.2
+T-R3	0	0	0	0	0	0	0.6
+T-R4	0	0	0	0	0.2	0	0.8
+T-R5	0	0	0	0	0	0.2	0.4
+T-R6	0.3	0.6	0	0	0	0	0.1
+T-R7	0	0	0.8	0	0	0	0
