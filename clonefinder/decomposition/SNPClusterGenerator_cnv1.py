@@ -8,7 +8,7 @@ from scipy import stats
 import numpy as np
 import scipy
 import numpy
-from sklearn.cluster import KMeans
+#from sklearn.cluster import KMeans
 
 class Calculation:
     def compute_estimated_SNVfrequency1(self, CloFre, CloSeq):
