@@ -11,13 +11,12 @@ class cluster_test():
          outAncAll='tumor\tDecsendant-Ancestor\tSNV posi\tType\tObsFre\n'		 
          Clone_list, clone_seq_dic = Align.name2seq(clone_seq_builder)	
          new_clone_freq={}
-         new_clone_seq_dic={}	
-		 
+         new_clone_seq_dic={}		 
          for tumor in v_obs:
              CNV=Tu2CNV[tumor]
              Clo2Fre=CloFre_clone['T-'+tumor]	
              ObsFre = v_obs[tumor]
-             add_clone_freq={}
+
              clone_order=[]
              MutNum2Clo={}
              MutNum_ls=[]			 
@@ -37,7 +36,7 @@ class cluster_test():
              CloNum=len(clone_order)
              C1Max=CloNum-1
              InsigLs=[]
-             add_clone_freq[tumor]=[]        	 
+         	 
              C1=0	
              while C1<C1Max:
                  Clo1=clone_seq_dic['#'+clone_order[C1]]
@@ -66,14 +65,9 @@ class cluster_test():
                 				  
                           P=P[-1]						  
                      if P>Cut:
-                          if clone_order[C1].find('Clu')!=-1 and clone_order[C2].find('Clu')==-1:  
-                                 InsigLs.append(clone_order[clone_order[C1]])
-
-                                  								 
-                          else: 
-                                 InsigLs.append(clone_order[C2])						  
-			  					 
-                             
+                          if clone_order[C1].find('Clu')!=-1 and clone_order[C2].find('Clu')==-1:  InsigLs.append(clone_order[C1])					 
+                          else: InsigLs.append(clone_order[C2])					 
+  
                      C2+=1	
 		
                  C1+=1
@@ -81,23 +75,9 @@ class cluster_test():
              if InsigLs!=[]: print 'insignificant clones', tumor, InsigLs
              new_clone_fre_in={}			 
              for Clo in Clo2Fre:
-                 New_cloe_hit=[]			 
                  if Clo2Fre[Clo]>0 and InsigLs.count(Clo)==0:
-                      if new_clone_fre_in.has_key(Clo)!=True: new_clone_fre_in[Clo]=0				 
-                      new_clone_fre_in[Clo]+=Clo2Fre[Clo]
-    	  
-                      new_clone_seq_dic['#'+Clo]=clone_seq_dic['#'+Clo]	
-                      New_cloe_hit.append(Clo)
-             for InsigClo in InsigLs:
-                      	Index=clone_order.index(InsigClo)
-                        Cont='y'
-                        while Cont=='y':
-                            NextClo=clone_order[Index-1]
-                            if InsigLs.count(NextClo)==0 and Clo2Fre[NextClo]>0: 
-                                   Cont='n'
-                            else: Index=Index-1	
-                        if new_clone_fre_in.has_key(NextClo)!=True: new_clone_fre_in[NextClo]=0							
-                        new_clone_fre_in[NextClo]+=	Clo2Fre[InsigClo]					
+                      new_clone_fre_in[Clo]=Clo2Fre[Clo]
+                      new_clone_seq_dic['#'+Clo]=clone_seq_dic['#'+Clo]					  
              new_clone_freq['T-'+tumor]= new_clone_fre_in                     				 
          new_seq_builder=Align.UpMeg(new_clone_seq_dic,[])				 
  

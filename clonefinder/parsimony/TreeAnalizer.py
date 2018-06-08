@@ -1,6 +1,6 @@
 from alignments.MegaAlignment import MegaAlignment
 from Bio import Phylo
-#from ete2 import Tree
+from ete2 import Tree
 import os
 
 class TreeAnalizer:
