@@ -1,4 +1,4 @@
-from alignments.FreqToMegaSeq import FreqToMegaSeq
+
 from parsers.AncestralStatesParser import AncestralStatesParser
 from MakeAncSeqMPMin import MakeAncSeqMPMin
 from alignments.MegaAlignment import MegaAlignment
@@ -25,35 +25,26 @@ class MegaMP(object):
         self._num_trees = 0
         self._mega_id = ''
         self._ancestral_states_list = []
-        #self._newick_trees = []
         self._temp_dir = tempfile.gettempdir() + os.sep
-        	
+
         
-    def __del__(self):
-        self._cleanup_temp_files()
-        
-    def do_mega_mp(self, alignment_builder, mega_id):
+    def do_mega_mp(self, alignment_builder, mega_id):  
         self._newick_trees = []       
         print 'constructing MP tree'
         result = False
         self._update_file_names(mega_id)
-      #  print self._alignment_file		
         Align = MegaAlignment()
-        Align.save_mega_alignment_to_file(self._alignment_file, alignment_builder)       		
-
+        Align.save_mega_alignment_to_file(self._alignment_file, alignment_builder)	
         cl = self._command_line_string()
         os.system(cl)
         if os.path.isfile(self._newick_file) == True:
             result = True
             nf = open(self._newick_file, 'r')
             ns = nf.readlines()
-            print 'MP tree(s):'
             for line in ns:
-                print line
                 self._newick_trees.append(line)
             nf.close()
-            self._retrieve_ancestral_states()
-      #  self._cleanup_temp_files()			
+            self._retrieve_ancestral_states()		
         return result
         
     def _update_file_names(self, mega_id):        
@@ -131,7 +122,7 @@ class MegaMP(object):
     def newick_trees(self):
         return self._newick_trees
     
-    def alignment_least_back_parallel_muts(self, remove_duplicates = True):
+    def alignment_least_back_parallel_muts(self, remove_duplicates = True): #used
         print 'finding alignment with least parallel and back mutations...'#,self.newick_trees
         files = self._get_ancestral_states_files()
         seq_maker = MakeAncSeqMPMin()

@@ -1,5 +1,5 @@
 from alignments.MegaAlignment import MegaAlignment
-from estimated_clone_frequency.CloneFrequencyAnalizer import CloneFrequencyAnalizer
+from output.CloneFrequencyAnalizer import CloneFrequencyAnalizer
 
 class OutputWrite():
     def GetOut(self, OutFileName, In):
@@ -11,6 +11,10 @@ class OutputWrite():
         CloFreAnalize = CloneFrequencyAnalizer()		
 
         NameOrder, Clo2Seq = Align.name2seq(seqs)
+        if CloFre=={}:
+            CloFre['T-A']={}		
+            for Clo in Clo2Seq:
+                CloFre['T-A'][Clo[1:]]=1			
        # print Clo2Seq,seqs		
         Len = len(Clo2Seq[NameOrder[0]])		
         out = ['#MEGA','!Title SNVs;','!Format datatype=dna;',' ','#hg19','A'*Len]			
