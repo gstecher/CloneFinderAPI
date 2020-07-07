@@ -1,5 +1,5 @@
 CloneFinder_v0.1.1
-Updated May 9, 2019
+Updated June 6, 2020
 ==================
 
 CloneFinder was developed by Sudhir Kumar
@@ -10,12 +10,13 @@ Installation
 ==================
 CloneFinder is a python script developed in a Windows and Unix/Linux 64-bit architecture, and does not need to be compiled prior to usage. To use CloneFinder, the following python packages need to be installed.
 
-Python 2
+Python 3
 SciPy
 NumPy
 Biopython 
 
-Additionally, CloneFinder uses MEGA-CC (>= 7.0.18). MEGA-CC can be downloaded for Windows, Mac OS X, and Linux from (http://www.megasoftware.net).
+Additionally, CloneFinder uses MEGA-CC (>= 7.0.18). MEGA-CC can be downloaded for Windows, Mac OS X, and Linux from (http://www.megasoftware.net). SciPy, NumPy, and Biopython are python packages and can be installed by using Anaconda (https://www.anaconda.com/) or PyPI (https://pypi.org/).
+CloneFinder for python 2 is also available. However, this version has not been maintained, and bugs are not fixed.  
 
 Input file
 ==================
@@ -58,10 +59,13 @@ Output files
 This file can be opened with a text editor or MEGA (http://www.megasoftware.net). In each clone sequence, 'A' indicates wild-type allele and 'T' indicates mutant-type allele. The order follows that of the original input file. 
 2. Clone frequencies (e.g., Input_CloneFinder.txt)
 Clone frequencies in each tumor sample are given. 
-
+3. Clone phylogeny (e.g., Input_CloneFinder.nwk)
+This file can be opened with a text editor or MEGA (http://www.megasoftware.net). 
+4. Summary table (e.g., Inputsnv_summary.txt)
+Parameter settings used for the analysis are listed. 
 
 How to cite
 =================
 If you use this CloneFinder software in your work, please cite the accompanying publication:
 
-Sayaka Miura, Karen Gomez, Oscar Murillo, and Sudhir Kumar. Performance of methods for predicting clone genotypes from bulk sequencing of multiple tumor samples. XXX (2018) 
+Sayaka Miura, Karen Gomez, Oscar Murillo, Louise A Huuki, Tracy Vu, Tiffany Buturla, & Sudhir Kumar. Predicting clone genotypes from tumor bulk sequencing of multiple samples. Bioinformatics (2018) 34(23):4017-4026
