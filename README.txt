@@ -1,3 +1,5 @@
+We moved to https://github.com/SayakaMiura/CloneFinder.
+
 CloneFinder_v0.1.1
 Updated June 6, 2020
 ==================
